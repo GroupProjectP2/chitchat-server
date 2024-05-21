@@ -4,7 +4,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 const express = require("express");
 const router = require("./routers/index");
-// const errHandler = require("./middlewares/errorHandler");
+const errHandler = require("./middlewares/errorHandler");
 const cors = require("cors");
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
-// app.use(errHandler);
+app.use(errHandler);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

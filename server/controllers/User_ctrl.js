@@ -1,33 +1,13 @@
-const { hashPassword } = require("../helpers/bcrypt");
+const { hashPassword, comparePassword } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 const { User } = require("../models");
 
 class User_ctrl {
+  //* ─── Register ────────────────────────────────────────────────────────
   static async register(req, res, next) {
     try {
       const { fullName, username, password, confirmPassword, gender } =
         req.body;
-
-      if (!fullName) {
-        throw {
-          status: 400,
-          message: "Full name is required",
-        };
-      }
-
-      if (!username) {
-        throw {
-          status: 400,
-          message: "Username is required",
-        };
-      }
-
-      if (!password) {
-        throw {
-          status: 400,
-          message: "Password is required",
-        };
-      }
 
       if (password !== confirmPassword) {
         throw {
@@ -36,18 +16,7 @@ class User_ctrl {
         };
       }
 
-      if (!gender) {
-        throw {
-          status: 400,
-          message: "Gender is required",
-        };
-      }
-
-      const user = await User.findOne({
-        where: {
-          username,
-        },
-      });
+      const user = await User.findOne({ where: { username } });
 
       if (user) {
         throw {
@@ -84,6 +53,53 @@ class User_ctrl {
       });
     } catch (error) {
       console.log("🚀 ~ User_ctrl ~ register ~ error:", error);
+      next(error);
+    }
+  }
+
+  //* ─── Login ───────────────────────────────────────────────────────────
+  static async login(req, res, next) {
+    try {
+      const { username, password } = req.body;
+
+      if (!username) {
+        throw {
+          status: 400,
+          message: "Username is required",
+        };
+      }
+
+      if (!password) {
+        throw {
+          status: 400,
+          message: "Password is required",
+        };
+      }
+
+      const user = await User.findOne({ where: { username } });
+
+      if (!user) {
+        throw { name: "ValidationError" };
+      }
+
+      const isPasswordValid = comparePassword(password, user.password);
+
+      if (!isPasswordValid) {
+        throw { name: "ValidationError" };
+      }
+
+      const access_token = createToken({ id: user.id });
+
+      res.status(200).json({
+        id: user.id,
+        fullName: user.fullName,
+        username: user.username,
+        profilePic: user.profilePic,
+        access_token,
+      });
+    } catch (error) {
+      console.log("🚀 ~ User_ctrl ~ login ~ error:", error);
+      next(error);
     }
   }
 }
