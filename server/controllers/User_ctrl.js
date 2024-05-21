@@ -102,6 +102,26 @@ class User_ctrl {
       next(error);
     }
   }
+
+  //* ─── Get Data User ───────────────────────────────────────────────────
+  static async getDataUser(req, res, next) {
+    try {
+      const { id } = req.user;
+
+      const user = await User.findByPk(id, {
+        attributes: {
+          exclude: ["password"],
+        },
+      });
+
+      res.status(200).json({
+        user,
+      });
+    } catch (error) {
+      console.log("🚀 ~ User_ctrl ~ getDataUser ~ error:", error);
+      next(error);
+    }
+  }
 }
 
 module.exports = User_ctrl;

@@ -12,6 +12,12 @@ const errHandler = (err, req, res, next) => {
     case "ValidationError":
       status = 400;
       message = "Invalid username or password";
+      break;
+
+    case "UnauthorizedError":
+      status = 401;
+      message = "Invalid token";
+      break;
 
     default:
       status = 500;
