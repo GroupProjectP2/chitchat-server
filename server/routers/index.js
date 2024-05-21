@@ -8,7 +8,7 @@ router.post("/", (req, res) => {
 });
 
 router.post("/register", User_ctrl.register);
-router.post("/login");
+router.post("/login", User_ctrl.login);
 
 router.get("/messages/:id");
 router.post("/messages/:id");
