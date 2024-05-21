@@ -16,15 +16,6 @@ class User_ctrl {
         };
       }
 
-      const user = await User.findOne({ where: { username } });
-
-      if (user) {
-        throw {
-          status: 400,
-          message: "Username already exists",
-        };
-      }
-
       const hashedPassword = hashPassword(password);
 
       const boyPic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
