@@ -14,7 +14,7 @@ router.post("/login", User_ctrl.login);
 
 router.use(authentication);
 router.post("/messages/:id", Message_ctrl.sendMessage);
-router.get("/messages/:id");
+router.get("/messages/:id", Message_ctrl.getMessage);
 
 router.get("/users", User_ctrl.getDataUser);
 
