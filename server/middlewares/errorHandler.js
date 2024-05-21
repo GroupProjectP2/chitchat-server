@@ -1,4 +1,4 @@
-const errHandler = (err, req, res, next) => {
+module.exports = errHandler = (err, req, res, next) => {
   let status;
   let message;
 
