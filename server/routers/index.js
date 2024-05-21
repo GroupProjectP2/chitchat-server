@@ -13,6 +13,6 @@ router.post("/login", User_ctrl.login);
 router.get("/messages/:id");
 router.post("/messages/:id");
 
-router.get("/users");
+router.get("/users", User_ctrl.getDataUser);
 
 module.exports = router;
