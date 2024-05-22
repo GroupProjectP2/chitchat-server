@@ -19,6 +19,11 @@ module.exports = errHandler = (err, req, res, next) => {
       message = "Invalid token";
       break;
 
+    case "CustomError":
+      status = err.status;
+      message = err.message;
+      break;
+
     default:
       status = 500;
       message = "Internal server error";
