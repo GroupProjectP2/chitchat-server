@@ -45,6 +45,15 @@ io.on("connection", (socket) => {
     };
   });
 
+  socket.on("join_room", (roomId) => {
+    socket.join(roomId);
+    console.log(`User with ID:${socket.id} joined room: ${roomId}`);
+  });
+  socket.on("send_message", (messageData) => {
+    console.log({ messageData });
+    socket.to(messageData.room).emit("receive_message", messageData);
+  });
+
   socket.on("hello", (pesan) => {
     console.log({ pesan });
   });

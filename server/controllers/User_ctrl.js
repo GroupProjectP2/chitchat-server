@@ -16,7 +16,7 @@ class User_ctrl {
         };
       }
 
-      const hashedPassword = hashPassword(password);
+      // const hashedPassword = hashPassword(password);
 
       const boyPic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
       const girlPic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
@@ -24,7 +24,7 @@ class User_ctrl {
       const newUser = await User.create({
         fullName,
         username,
-        password: hashedPassword,
+        password,
         gender,
         profilePic: gender === "male" ? boyPic : girlPic,
       });
