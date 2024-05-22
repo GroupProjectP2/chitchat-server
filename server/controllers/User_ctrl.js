@@ -11,6 +11,7 @@ class User_ctrl {
 
       if (password !== confirmPassword) {
         throw {
+          name: "CustomError",
           status: 400,
           message: "Password and confirm password must be the same",
         };
