@@ -7,11 +7,7 @@ const express = require("express");
 const router = require("./routers/index");
 const errHandler = require("./middlewares/errorHandler");
 const cors = require("cors");
-const { createServer } = require("http");
-const { Server } = require("socket.io");
-const {User, Message} = require('./models')
-
-const app = express();
+const { app, httpServer } = require("./sockets/socket");
 const port = process.env.PORT || 3000;
 
 app.use(cors());
@@ -19,56 +15,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
 app.use(errHandler);
-
-const httpServer = createServer(app);
-//--------------------socket-----------------------------
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:5173", //client domain
-    methods: ["GET", "POST"],
-  },
-});
-
-const users = [];
-io.on("connection", (socket) => {
-  io.emit("newconnection");
-  console.log(`User connected with socketID: ${socket.id}`);
-  socket.emit("hello", "Hello from server");
-
-  socket.on("sendMessage", async (payload) => {
-    console.log({ payload });
-    const {id,sender,message,time} = payload;
-    const userLoggedIn = await User.findByPk(id)
-
-    // const newMessage = await Message.create({
-    //   SenderId: userLoggedIn.id,
-      
-    //   messages: message
-    // })
-
-    socket.broadcast.emit("newMessage", payload);
-  });
-  socket.on("hello", (pesan) => {
-    console.log({ pesan });
-  });
-
-  //-------------------test------
-  socket.on("join_room", (roomId) => {
-    socket.join(roomId);
-    console.log(`User with ID:${socket.id} joined room: ${roomId}`);
-  });
-  socket.on("send_message", (messageData) => {
-    console.log({ messageData });
-    socket.to(messageData.room).emit("receive_message", messageData);
-  });
-
-  //-------------------test------
-
-  socket.on("disconnect", () => {
-    console.log("User Disconnected, socketID:", socket.id);
-  });
-});
-//--------------------socket-----------------------------
 
 httpServer.listen(port, () => {
   console.clear();

@@ -1,4 +1,5 @@
 const { Message, User } = require("../models");
+const { getReceiverSocket, io } = require("../sockets/socket");
 
 class Message_ctrl {
   //* ─── Send Message ────────────────────────────────────────────────────
@@ -13,6 +14,12 @@ class Message_ctrl {
         SenderId,
         ReceiverId,
       });
+
+      const receiverSocketId = getReceiverSocket(ReceiverId);
+
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("new message", newMessage);
+      }
 
       res.status(201).json({ newMessage });
     } catch (error) {
