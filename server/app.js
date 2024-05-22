@@ -43,24 +43,22 @@ io.on("connection", (socket) => {
   });
 
   //-------------------test------
-  socket.on('join_room', (roomId)=>{
-    socket.join(roomId)
-    console.log(`User with ID:${socket.id} joined room: ${roomId}`)
-  })
-  socket.on('send_message', (messageData) => {
-    console.log({messageData})
-    socket.to(messageData.room).emit('receive_message',messageData)
-  })
+  socket.on("join_room", (roomId) => {
+    socket.join(roomId);
+    console.log(`User with ID:${socket.id} joined room: ${roomId}`);
+  });
+  socket.on("send_message", (messageData) => {
+    console.log({ messageData });
+    socket.to(messageData.room).emit("receive_message", messageData);
+  });
 
-//-------------------test------
+  //-------------------test------
 
-  socket.on('disconnect', ()=> {
-    console.log("User Disconnected, socketID:", socket.id)
-  })
+  socket.on("disconnect", () => {
+    console.log("User Disconnected, socketID:", socket.id);
+  });
 });
 //--------------------socket-----------------------------
-
-
 
 httpServer.listen(port, () => {
   console.clear();
