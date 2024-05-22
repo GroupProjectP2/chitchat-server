@@ -20,6 +20,7 @@ app.use(router);
 app.use(errHandler);
 
 const httpServer = createServer(app);
+//--------------------socket-----------------------------
 const io = new Server(httpServer, {
   cors: {
     origin: "http://localhost:5173", //client domain
@@ -28,7 +29,6 @@ const io = new Server(httpServer, {
 });
 
 const users = [];
-
 io.on("connection", (socket) => {
   io.emit("newconnection");
   console.log(`User connected with socketID: ${socket.id}`);
@@ -36,15 +36,13 @@ io.on("connection", (socket) => {
 
   socket.on("sendMessage", (payload) => {
     console.log({ payload });
-    io.emit("newMessage", payload);
+    socket.broadcast.emit("newMessage", payload);
+  });
+  socket.on("hello", (pesan) => {
+    console.log({ pesan });
   });
 
-  socket.on("setUser", (username) => {
-    socket.user = {
-      username,
-    };
-  });
-
+  //-------------------test------
   socket.on("join_room", (roomId) => {
     socket.join(roomId);
     console.log(`User with ID:${socket.id} joined room: ${roomId}`);
@@ -54,10 +52,13 @@ io.on("connection", (socket) => {
     socket.to(messageData.room).emit("receive_message", messageData);
   });
 
-  socket.on("hello", (pesan) => {
-    console.log({ pesan });
+  //-------------------test------
+
+  socket.on("disconnect", () => {
+    console.log("User Disconnected, socketID:", socket.id);
   });
 });
+//--------------------socket-----------------------------
 
 httpServer.listen(port, () => {
   console.clear();
