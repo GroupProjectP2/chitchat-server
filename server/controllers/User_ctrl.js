@@ -17,8 +17,6 @@ class User_ctrl {
         };
       }
 
-      // const hashedPassword = hashPassword(password);
-
       const boyPic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
       const girlPic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
@@ -52,7 +50,9 @@ class User_ctrl {
   //* ─── Login ───────────────────────────────────────────────────────────
   static async login(req, res, next) {
     try {
+      console.log("🚀 ~ User_ctrl ~ login ~ password:", req.body);
       const { username, password } = req.body;
+      console.log("🚀 ~ User_ctrl ~ login ~ username:", username);
 
       if (!username) {
         throw {
