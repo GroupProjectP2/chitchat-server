@@ -9,6 +9,7 @@ const errHandler = require("./middlewares/errorHandler");
 const cors = require("cors");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const {User, Message} = require('./models')
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,8 +35,17 @@ io.on("connection", (socket) => {
   console.log(`User connected with socketID: ${socket.id}`);
   socket.emit("hello", "Hello from server");
 
-  socket.on("sendMessage", (payload) => {
+  socket.on("sendMessage", async (payload) => {
     console.log({ payload });
+    const {id,sender,message,time} = payload;
+    const userLoggedIn = await User.findByPk(id)
+
+    // const newMessage = await Message.create({
+    //   SenderId: userLoggedIn.id,
+      
+    //   messages: message
+    // })
+
     socket.broadcast.emit("newMessage", payload);
   });
   socket.on("hello", (pesan) => {
