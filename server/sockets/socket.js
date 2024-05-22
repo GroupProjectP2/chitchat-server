@@ -31,6 +31,14 @@ io.on("connection", (socket) => {
 
   io.emit("getOnlineUsers", Object.keys(userSocket));
 
+  //-------------------------socket baru----------------------------
+  socket.on("sendMessage", async (payload) => {
+    console.log({ payload });
+
+    socket.broadcast.emit("newMessage", payload);
+  });
+  //-------------------------socket baru----------------------------
+
   socket.on("disconnect", () => {
     console.log(`User disconnected with socketID: ${socket.id}`);
     delete userSocket[userId];
